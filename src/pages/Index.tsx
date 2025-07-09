@@ -111,6 +111,8 @@ All colors MUST be HSL.
       opacity: 0;
     }
   }
+
+  .animate-delay-300 {
     animation: fadeInUp 0.8s ease-out forwards;
     animation-delay: 0.3s;
     opacity: 0;
