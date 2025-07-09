@@ -97,8 +97,6 @@ All colors MUST be HSL.
   @keyframes fallingStar {
     0% {
       transform: translateY(-100vh) rotate(0deg);
-      opacity: 0;
-    }
     10% {
       opacity: 1;
     }
@@ -107,47 +105,10 @@ All colors MUST be HSL.
     }
     100% {
       transform: translateY(100vh) rotate(360deg);
+      transform: translateY(100vh) rotate(360deg);
       opacity: 0;
     }
   }
-    }
-  }
-
-  @keyframes typewriter {
-    from {
-      width: 0;
-    }
-    to {
-      width: 100%;
-    }
-  }
-
-  @keyframes blink {
-    0%, 50% {
-      border-color: transparent;
-    }
-    51%, 100% {
-      border-color: white;
-    }
-  }
-
-  /* Text Animation Classes */
-  .animate-fade-in-up {
-    animation: fadeInUp 1s ease-out forwards;
-  }
-
-  .animate-slide-in-left {
-    animation: slideInLeft 1s ease-out forwards;
-  }
-
-  .animate-slide-in-right {
-    animation: slideInRight 1s ease-out forwards;
-  }
-
-  .animate-glow {
-    animation: glow 3s ease-in-out infinite;
-  }
-
   .typewriter-container {
     overflow: hidden;
     white-space: nowrap;
