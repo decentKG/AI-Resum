@@ -94,61 +94,88 @@ All colors MUST be HSL.
   }
 
   /* Falling Stars Animation */
-  @keyframes twinkle {
+  @keyframes fallingStar {
     0% {
+      transform: translateY(-100vh) rotate(0deg);
       opacity: 0;
     }
-    25% {
-      opacity: 0.3;
-    }
-    50% {
+    10% {
       opacity: 1;
     }
-    75% {
-      opacity: 0.6;
+    90% {
+      opacity: 1;
     }
     100% {
+      transform: translateY(100vh) rotate(360deg);
       opacity: 0;
     }
   }
-
-  @keyframes twinkleBright {
-    0% {
-      opacity: 0.4;
-    }
-    25% {
-      opacity: 0.7;
-    }
-    50% {
-      opacity: 1;
-    }
-    75% {
-      opacity: 0.8;
-    }
-    100% {
-      opacity: 0.4;
     }
   }
 
-  @keyframes twinkleSubtle {
-    0% {
-      opacity: 0.2;
+  @keyframes typewriter {
+    from {
+      width: 0;
     }
-    25% {
-      opacity: 0.4;
-    }
-    50% {
-      opacity: 0.6;
-    }
-    75% {
-      opacity: 0.5;
-    }
-    100% {
-      opacity: 0.2;
+    to {
+      width: 100%;
     }
   }
 
-  .star {
+  @keyframes blink {
+    0%, 50% {
+      border-color: transparent;
+    }
+    51%, 100% {
+      border-color: white;
+    }
+  }
+
+  /* Text Animation Classes */
+  .animate-fade-in-up {
+    animation: fadeInUp 1s ease-out forwards;
+  }
+
+  .animate-slide-in-left {
+    animation: slideInLeft 1s ease-out forwards;
+  }
+
+  .animate-slide-in-right {
+    animation: slideInRight 1s ease-out forwards;
+  }
+
+  .animate-glow {
+    animation: glow 3s ease-in-out infinite;
+  }
+
+  .typewriter-container {
+    overflow: hidden;
+    white-space: nowrap;
+    margin: 0 auto;
+    border-right: 3px solid white;
+    animation: typewriter 3s steps(40, end), blink 0.75s step-end infinite;
+  }
+
+  /* Staggered animation delays */
+  .animate-delay-300 {
+    animation-delay: 0.3s;
+    opacity: 0;
+  }
+
+  .animate-delay-600 {
+    animation-delay: 0.6s;
+    opacity: 0;
+  }
+
+  .animate-delay-900 {
+    animation-delay: 0.9s;
+    opacity: 0;
+  }
+
+  .animate-delay-1200 {
+    animation-delay: 1.2s;
+    opacity: 0;
+  }
     box-shadow: 0 0 4px rgba(255, 255, 255, 0.6), 0 0 8px rgba(255, 255, 255, 0.3);
     position: absolute;
     background: white;
