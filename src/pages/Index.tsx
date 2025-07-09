@@ -48,30 +48,36 @@ const Index = () => {
         
         
         {/* Falling Stars */}
-        <div className="absolute inset-0 overflow-hidden">
-          {/* Slow falling stars */}
-          <div className="star absolute w-1 h-1 bg-white rounded-full" style={{ left: '8%', animationName: 'fallingStarSlow', animationDuration: '12s', animationDelay: '0s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
-          <div className="star absolute w-1.5 h-1.5 bg-white rounded-full" style={{ left: '18%', animationName: 'fallingStarSlow', animationDuration: '14s', animationDelay: '3s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
-          <div className="star absolute w-1 h-1 bg-white rounded-full" style={{ left: '28%', animationName: 'fallingStarSlow', animationDuration: '16s', animationDelay: '6s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
-          <div className="star absolute w-2 h-2 bg-white rounded-full" style={{ left: '38%', animationName: 'fallingStarSlow', animationDuration: '13s', animationDelay: '1.5s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
-          <div className="star absolute w-1 h-1 bg-white rounded-full" style={{ left: '48%', animationName: 'fallingStarSlow', animationDuration: '15s', animationDelay: '4.5s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
-          <div className="star absolute w-1.5 h-1.5 bg-white rounded-full" style={{ left: '58%', animationName: 'fallingStarSlow', animationDuration: '17s', animationDelay: '7.5s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
-          <div className="star absolute w-1 h-1 bg-white rounded-full" style={{ left: '68%', animationName: 'fallingStarSlow', animationDuration: '14s', animationDelay: '2s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
-          <div className="star absolute w-2 h-2 bg-white rounded-full" style={{ left: '78%', animationName: 'fallingStarSlow', animationDuration: '12s', animationDelay: '5s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
-          <div className="star absolute w-1 h-1 bg-white rounded-full" style={{ left: '88%', animationName: 'fallingStarSlow', animationDuration: '16s', animationDelay: '8s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {/* Bright twinkling stars */}
+          <div className="star star-large w-2 h-2" style={{ left: '15%', top: '20%', animationName: 'twinkleBright', animationDuration: '3s', animationDelay: '0s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}></div>
+          <div className="star w-1.5 h-1.5" style={{ left: '25%', top: '35%', animationName: 'twinkleBright', animationDuration: '2.5s', animationDelay: '1s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}></div>
+          <div className="star star-large w-2 h-2" style={{ left: '45%', top: '15%', animationName: 'twinkleBright', animationDuration: '4s', animationDelay: '2s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}></div>
+          <div className="star w-1.5 h-1.5" style={{ left: '65%', top: '40%', animationName: 'twinkleBright', animationDuration: '3.5s', animationDelay: '0.5s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}></div>
+          <div className="star star-large w-2 h-2" style={{ left: '85%', top: '25%', animationName: 'twinkleBright', animationDuration: '2.8s', animationDelay: '1.5s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}></div>
           
-          {/* Medium speed falling stars */}
-          <div className="star absolute w-1.5 h-1.5 bg-white rounded-full" style={{ left: '12%', animationName: 'fallingStar', animationDuration: '8s', animationDelay: '1s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
-          <div className="star absolute w-1 h-1 bg-white rounded-full" style={{ left: '32%', animationName: 'fallingStar', animationDuration: '9s', animationDelay: '3.5s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
-          <div className="star absolute w-2 h-2 bg-white rounded-full" style={{ left: '52%', animationName: 'fallingStar', animationDuration: '7s', animationDelay: '6s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
-          <div className="star absolute w-1 h-1 bg-white rounded-full" style={{ left: '72%', animationName: 'fallingStar', animationDuration: '8.5s', animationDelay: '2.5s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
-          <div className="star absolute w-1.5 h-1.5 bg-white rounded-full" style={{ left: '92%', animationName: 'fallingStar', animationDuration: '9.5s', animationDelay: '5.5s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
+          {/* Medium twinkling stars */}
+          <div className="star w-1 h-1" style={{ left: '8%', top: '45%', animationName: 'twinkle', animationDuration: '4s', animationDelay: '0s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}></div>
+          <div className="star w-1.5 h-1.5" style={{ left: '18%', top: '60%', animationName: 'twinkle', animationDuration: '5s', animationDelay: '2s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}></div>
+          <div className="star w-1 h-1" style={{ left: '32%', top: '55%', animationName: 'twinkle', animationDuration: '3.5s', animationDelay: '1s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}></div>
+          <div className="star w-1.5 h-1.5" style={{ left: '52%', top: '65%', animationName: 'twinkle', animationDuration: '4.5s', animationDelay: '3s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}></div>
+          <div className="star w-1 h-1" style={{ left: '72%', top: '58%', animationName: 'twinkle', animationDuration: '3.8s', animationDelay: '0.8s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}></div>
+          <div className="star w-1.5 h-1.5" style={{ left: '88%', top: '50%', animationName: 'twinkle', animationDuration: '4.2s', animationDelay: '2.5s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}></div>
           
-          {/* Fast falling stars (occasional) */}
-          <div className="star absolute w-1 h-1 bg-white rounded-full" style={{ left: '22%', animationName: 'fallingStarFast', animationDuration: '4s', animationDelay: '8s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
-          <div className="star absolute w-1.5 h-1.5 bg-white rounded-full" style={{ left: '42%', animationName: 'fallingStarFast', animationDuration: '3.5s', animationDelay: '12s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
-          <div className="star absolute w-1 h-1 bg-white rounded-full" style={{ left: '62%', animationName: 'fallingStarFast', animationDuration: '4.5s', animationDelay: '16s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
-          <div className="star absolute w-2 h-2 bg-white rounded-full" style={{ left: '82%', animationName: 'fallingStarFast', animationDuration: '3.8s', animationDelay: '20s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
+          {/* Subtle background stars */}
+          <div className="star w-1 h-1" style={{ left: '12%', top: '75%', animationName: 'twinkleSubtle', animationDuration: '6s', animationDelay: '0s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}></div>
+          <div className="star w-1 h-1" style={{ left: '28%', top: '80%', animationName: 'twinkleSubtle', animationDuration: '7s', animationDelay: '3s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}></div>
+          <div className="star w-1 h-1" style={{ left: '38%', top: '70%', animationName: 'twinkleSubtle', animationDuration: '5.5s', animationDelay: '1.5s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}></div>
+          <div className="star w-1 h-1" style={{ left: '58%', top: '85%', animationName: 'twinkleSubtle', animationDuration: '6.5s', animationDelay: '4s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}></div>
+          <div className="star w-1 h-1" style={{ left: '78%', top: '78%', animationName: 'twinkleSubtle', animationDuration: '5.8s', animationDelay: '2s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}></div>
+          <div className="star w-1 h-1" style={{ left: '92%', top: '72%', animationName: 'twinkleSubtle', animationDuration: '6.2s', animationDelay: '0.5s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}></div>
+          
+          {/* Additional scattered stars for depth */}
+          <div className="star w-1 h-1" style={{ left: '5%', top: '30%', animationName: 'twinkleSubtle', animationDuration: '8s', animationDelay: '2s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}></div>
+          <div className="star w-1 h-1" style={{ left: '35%', top: '25%', animationName: 'twinkle', animationDuration: '4.8s', animationDelay: '1.2s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}></div>
+          <div className="star w-1 h-1" style={{ left: '55%', top: '30%', animationName: 'twinkleSubtle', animationDuration: '7.5s', animationDelay: '3.5s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}></div>
+          <div className="star w-1 h-1" style={{ left: '75%', top: '18%', animationName: 'twinkle', animationDuration: '5.2s', animationDelay: '0.8s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}></div>
+          <div className="star w-1 h-1" style={{ left: '95%', top: '35%', animationName: 'twinkleSubtle', animationDuration: '6.8s', animationDelay: '4.2s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}></div>
         </div>
         
         {/* Content */}
