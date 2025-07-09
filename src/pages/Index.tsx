@@ -49,18 +49,29 @@ const Index = () => {
         
         {/* Falling Stars */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="star absolute w-1 h-1 bg-white rounded-full animate-pulse" style={{ left: '15%', animationName: 'fallingStar', animationDuration: '4s', animationDelay: '0s', animationIterationCount: 'infinite', animationTimingFunction: 'linear' }}></div>
-          <div className="star absolute w-1.5 h-1.5 bg-white rounded-full animate-pulse" style={{ left: '25%', animationName: 'fallingStar', animationDuration: '3.5s', animationDelay: '1s', animationIterationCount: 'infinite', animationTimingFunction: 'linear' }}></div>
-          <div className="star absolute w-1 h-1 bg-white rounded-full animate-pulse" style={{ left: '35%', animationName: 'fallingStar', animationDuration: '5s', animationDelay: '2s', animationIterationCount: 'infinite', animationTimingFunction: 'linear' }}></div>
-          <div className="star absolute w-2 h-2 bg-white rounded-full animate-pulse" style={{ left: '45%', animationName: 'fallingStar', animationDuration: '4.5s', animationDelay: '0.5s', animationIterationCount: 'infinite', animationTimingFunction: 'linear' }}></div>
-          <div className="star absolute w-1 h-1 bg-white rounded-full animate-pulse" style={{ left: '55%', animationName: 'fallingStar', animationDuration: '3.8s', animationDelay: '1.5s', animationIterationCount: 'infinite', animationTimingFunction: 'linear' }}></div>
-          <div className="star absolute w-1.5 h-1.5 bg-white rounded-full animate-pulse" style={{ left: '65%', animationName: 'fallingStar', animationDuration: '4.2s', animationDelay: '2.5s', animationIterationCount: 'infinite', animationTimingFunction: 'linear' }}></div>
-          <div className="star absolute w-1 h-1 bg-white rounded-full animate-pulse" style={{ left: '75%', animationName: 'fallingStar', animationDuration: '5.5s', animationDelay: '0.8s', animationIterationCount: 'infinite', animationTimingFunction: 'linear' }}></div>
-          <div className="star absolute w-2 h-2 bg-white rounded-full animate-pulse" style={{ left: '85%', animationName: 'fallingStar', animationDuration: '3.2s', animationDelay: '1.8s', animationIterationCount: 'infinite', animationTimingFunction: 'linear' }}></div>
-          <div className="star absolute w-1 h-1 bg-white rounded-full animate-pulse" style={{ left: '10%', animationName: 'fallingStar', animationDuration: '4.8s', animationDelay: '2.2s', animationIterationCount: 'infinite', animationTimingFunction: 'linear' }}></div>
-          <div className="star absolute w-1.5 h-1.5 bg-white rounded-full animate-pulse" style={{ left: '90%', animationName: 'fallingStar', animationDuration: '3.7s', animationDelay: '0.3s', animationIterationCount: 'infinite', animationTimingFunction: 'linear' }}></div>
-          <div className="star absolute w-1 h-1 bg-white rounded-full animate-pulse" style={{ left: '5%', animationName: 'fallingStar', animationDuration: '4.1s', animationDelay: '1.2s', animationIterationCount: 'infinite', animationTimingFunction: 'linear' }}></div>
-          <div className="star absolute w-2 h-2 bg-white rounded-full animate-pulse" style={{ left: '95%', animationName: 'fallingStar', animationDuration: '5.2s', animationDelay: '2.8s', animationIterationCount: 'infinite', animationTimingFunction: 'linear' }}></div>
+          {/* Slow falling stars */}
+          <div className="star absolute w-1 h-1 bg-white rounded-full" style={{ left: '8%', animationName: 'fallingStarSlow', animationDuration: '12s', animationDelay: '0s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
+          <div className="star absolute w-1.5 h-1.5 bg-white rounded-full" style={{ left: '18%', animationName: 'fallingStarSlow', animationDuration: '14s', animationDelay: '3s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
+          <div className="star absolute w-1 h-1 bg-white rounded-full" style={{ left: '28%', animationName: 'fallingStarSlow', animationDuration: '16s', animationDelay: '6s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
+          <div className="star absolute w-2 h-2 bg-white rounded-full" style={{ left: '38%', animationName: 'fallingStarSlow', animationDuration: '13s', animationDelay: '1.5s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
+          <div className="star absolute w-1 h-1 bg-white rounded-full" style={{ left: '48%', animationName: 'fallingStarSlow', animationDuration: '15s', animationDelay: '4.5s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
+          <div className="star absolute w-1.5 h-1.5 bg-white rounded-full" style={{ left: '58%', animationName: 'fallingStarSlow', animationDuration: '17s', animationDelay: '7.5s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
+          <div className="star absolute w-1 h-1 bg-white rounded-full" style={{ left: '68%', animationName: 'fallingStarSlow', animationDuration: '14s', animationDelay: '2s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
+          <div className="star absolute w-2 h-2 bg-white rounded-full" style={{ left: '78%', animationName: 'fallingStarSlow', animationDuration: '12s', animationDelay: '5s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
+          <div className="star absolute w-1 h-1 bg-white rounded-full" style={{ left: '88%', animationName: 'fallingStarSlow', animationDuration: '16s', animationDelay: '8s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
+          
+          {/* Medium speed falling stars */}
+          <div className="star absolute w-1.5 h-1.5 bg-white rounded-full" style={{ left: '12%', animationName: 'fallingStar', animationDuration: '8s', animationDelay: '1s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
+          <div className="star absolute w-1 h-1 bg-white rounded-full" style={{ left: '32%', animationName: 'fallingStar', animationDuration: '9s', animationDelay: '3.5s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
+          <div className="star absolute w-2 h-2 bg-white rounded-full" style={{ left: '52%', animationName: 'fallingStar', animationDuration: '7s', animationDelay: '6s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
+          <div className="star absolute w-1 h-1 bg-white rounded-full" style={{ left: '72%', animationName: 'fallingStar', animationDuration: '8.5s', animationDelay: '2.5s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
+          <div className="star absolute w-1.5 h-1.5 bg-white rounded-full" style={{ left: '92%', animationName: 'fallingStar', animationDuration: '9.5s', animationDelay: '5.5s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
+          
+          {/* Fast falling stars (occasional) */}
+          <div className="star absolute w-1 h-1 bg-white rounded-full" style={{ left: '22%', animationName: 'fallingStarFast', animationDuration: '4s', animationDelay: '8s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
+          <div className="star absolute w-1.5 h-1.5 bg-white rounded-full" style={{ left: '42%', animationName: 'fallingStarFast', animationDuration: '3.5s', animationDelay: '12s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
+          <div className="star absolute w-1 h-1 bg-white rounded-full" style={{ left: '62%', animationName: 'fallingStarFast', animationDuration: '4.5s', animationDelay: '16s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
+          <div className="star absolute w-2 h-2 bg-white rounded-full" style={{ left: '82%', animationName: 'fallingStarFast', animationDuration: '3.8s', animationDelay: '20s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in' }}></div>
         </div>
         
         {/* Content */}

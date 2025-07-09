@@ -96,19 +96,81 @@ All colors MUST be HSL.
   /* Falling Stars Animation */
   @keyframes fallingStar {
     0% {
-      transform: translateY(-100vh) rotate(0deg);
+      transform: translateY(-100vh) translateX(0px) rotate(0deg);
       opacity: 0;
     }
-    10% {
+    5% {
       opacity: 1;
     }
-    90% {
+    95% {
       opacity: 1;
     }
     100% {
-      transform: translateY(100vh) rotate(360deg);
+      transform: translateY(100vh) translateX(-50px) rotate(45deg);
       opacity: 0;
     }
+  }
+
+  @keyframes fallingStarSlow {
+    0% {
+      transform: translateY(-100vh) translateX(0px) rotate(0deg);
+      opacity: 0;
+    }
+    3% {
+      opacity: 0.8;
+    }
+    97% {
+      opacity: 0.8;
+    }
+    100% {
+      transform: translateY(100vh) translateX(-30px) rotate(30deg);
+      opacity: 0;
+    }
+  }
+
+  @keyframes fallingStarFast {
+    0% {
+      transform: translateY(-100vh) translateX(0px) rotate(0deg);
+      opacity: 0;
+    }
+    8% {
+      opacity: 1;
+    }
+    92% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100vh) translateX(-70px) rotate(60deg);
+      opacity: 0;
+    }
+  }
+
+  .star {
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.8), 0 0 12px rgba(255, 255, 255, 0.4);
+  }
+
+  .star::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2px;
+    height: 20px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), transparent);
+    transform: translate(-50%, -50%) rotate(45deg);
+    border-radius: 1px;
+  }
+
+  .star::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 2px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.8), transparent);
+    transform: translate(-50%, -50%) rotate(45deg);
+    border-radius: 1px;
   }
 }
 
