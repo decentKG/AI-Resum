@@ -35,6 +35,7 @@ import { useRef } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ChartContainer } from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import DashboardAnalytics from "@/components/DashboardAnalytics";
 
 // Mock data for demonstration
 const mockResumes = [
@@ -271,38 +272,7 @@ const Dashboard = () => {
         <div className="flex-1 p-6 space-y-6">
           {dashboardSection === 'analytics' ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="bg-white rounded-lg shadow p-6">
-                <h2 className="text-xl font-bold mb-4">Resume Stats</h2>
-                <ResponsiveContainer width="100%" height={250}>
-                  <BarChart data={[
-                    { name: 'Processed', value: processedResumes },
-                    { name: 'Processing', value: processingResumes },
-                  ]}>
-                    <XAxis dataKey="name" />
-                    <YAxis allowDecimals={false} />
-                    <Bar dataKey="value" fill="#6366f1" />
-                    <Tooltip />
-                  </BarChart>
-                </ResponsiveContainer>
-                <div className="space-y-2 mt-4">
-                  <div><span className="font-semibold">Total Resumes:</span> {totalResumes}</div>
-                  <div><span className="font-semibold">Average Match Score:</span> {avgMatchScore}%</div>
-                </div>
-              </div>
-              <div className="bg-white rounded-lg shadow p-6">
-                <h2 className="text-xl font-bold mb-4">Top Skills</h2>
-                <ResponsiveContainer width="100%" height={250}>
-                  <PieChart>
-                    <Pie data={topSkills.map((skill, idx) => ({ name: skill, value: allSkills.filter(s => s === skill).length, fill: ["#6366f1", "#22d3ee", "#f59e42", "#10b981", "#f43f5e", "#a21caf"][idx % 6] }))} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
-                      {topSkills.map((skill, idx) => <Cell key={skill} fill={["#6366f1", "#22d3ee", "#f59e42", "#10b981", "#f43f5e", "#a21caf"][idx % 6]} />)}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
-                <ul className="list-disc pl-6 mt-4">
-                  {topSkills.length > 0 ? topSkills.map(skill => <li key={skill}>{skill}</li>) : <li>No skills parsed yet.</li>}
-                </ul>
-              </div>
+              <DashboardAnalytics />
             </div>
           ) : (
             <>

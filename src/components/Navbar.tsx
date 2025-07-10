@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { FileText, BarChart3, Users, Shield, HelpCircle, LogIn, LogOut, Home } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/components/AuthContext";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import CompanyAnalytics from "@/components/CompanyAnalytics";
 
 const navLinks = [
   { to: "/", label: "Home", icon: <Home className="w-5 h-5 mr-1" /> },
@@ -15,11 +17,12 @@ const navLinks = [
 export default function Navbar() {
   const { isAuthenticated, setIsAuthenticated } = useAuth();
   const [open, setOpen] = useState(false); // for mobile menu
+  const [showAnalytics, setShowAnalytics] = useState(false);
 
   // Links for authenticated users
   const authLinks = [
     { to: "/dashboard", label: "Dashboard", icon: <BarChart3 className="w-5 h-5 mr-1" /> },
-    { to: "/dashboard", label: "Analytics", icon: <BarChart3 className="w-5 h-5 mr-1" /> },
+    { to: "#", label: "Analytics", icon: <BarChart3 className="w-5 h-5 mr-1" />, onClick: () => setShowAnalytics(true) },
     { to: "/dashboard", label: "Team", icon: <Users className="w-5 h-5 mr-1" /> },
     { to: "/dashboard", label: "Security", icon: <Shield className="w-5 h-5 mr-1" /> },
     { to: "/help", label: "Help", icon: <HelpCircle className="w-5 h-5 mr-1" /> },
@@ -56,6 +59,7 @@ export default function Navbar() {
               key={i}
               to={link.to}
               className="flex items-center px-4 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-blue-100 hover:text-blue-900 transition"
+              onClick={link.onClick}
             >
               {link.icon}
               {link.label}
@@ -105,6 +109,13 @@ export default function Navbar() {
               to={link.to}
               className="flex items-center px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-blue-100 hover:text-blue-900 transition"
               onClick={() => setOpen(false)}
+              onClick={(e) => {
+                if (link.onClick) {
+                  e.preventDefault();
+                  link.onClick();
+                }
+                setOpen(false);
+              }}
             >
               {link.icon}
               {link.label}
@@ -130,6 +141,16 @@ export default function Navbar() {
           )}
         </div>
       )}
+
+      {/* Company Analytics Modal */}
+      <Dialog open={showAnalytics} onOpenChange={setShowAnalytics}>
+        <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Company-Wide Analytics</DialogTitle>
+          </DialogHeader>
+          <CompanyAnalytics />
+        </DialogContent>
+      </Dialog>
     </nav>
   );
 } 
