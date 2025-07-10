@@ -6,18 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  Bell, 
-  Mail, 
-  MessageSquare, 
-  AlertTriangle,
-  CheckCircle,
-  Info,
-  Settings,
-  Trash2,
-  MarkAsRead,
-  Filter
-} from "lucide-react";
+import { Bell, Mail, MessageSquare, AlertTriangle, CheckCircle, Info, Settings, Trash2, BookMarked as MarkAsRead, Filter } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface Notification {
