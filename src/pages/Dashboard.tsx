@@ -36,6 +36,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { ChartContainer } from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import DashboardAnalytics from "@/components/DashboardAnalytics";
+import AllResumes from "@/components/AllResumes";
+import UploadManager from "@/components/UploadManager";
+import DataExport from "@/components/DataExport";
+import SecuritySettings from "@/components/SecuritySettings";
+import NotificationCenter from "@/components/NotificationCenter";
+import TeamManagement from "@/components/TeamManagement";
+import SystemSettings from "@/components/SystemSettings";
 
 // Mock data for demonstration
 const mockResumes = [
@@ -86,9 +93,9 @@ const Dashboard = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [resumes, setResumes] = useState(mockResumes);
+  const [activeSection, setActiveSection] = useState<'main' | 'analytics' | 'allResumes' | 'upload' | 'dataExport' | 'security' | 'notifications' | 'team' | 'settings'>('main');
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [dashboardSection, setDashboardSection] = useState<'main' | 'analytics'>('main');
 
   // Helper: Parse TXT file for demo
   const parseTxtResume = async (file: File) => {
@@ -192,33 +199,67 @@ const Dashboard = () => {
         {/* Navigation */}
         <nav className="flex-1 p-4">
           <div className="space-y-2">
-            <Link to="#" onClick={() => setDashboardSection('main')}>
-              <Button variant="ghost" className={`w-full justify-start ${dashboardSection === 'main' ? 'bg-primary-foreground/20 text-primary-foreground' : 'text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground'}`}> <BarChart3 className="w-4 h-4 mr-3" /> Dashboard </Button>
-            </Link>
-            <Button variant="ghost" className="w-full justify-start text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground">
+            <Button 
+              variant="ghost" 
+              className={`w-full justify-start ${activeSection === 'main' ? 'bg-primary-foreground/20 text-primary-foreground' : 'text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground'}`}
+              onClick={() => setActiveSection('main')}
+            >
+              <BarChart3 className="w-4 h-4 mr-3" />
+              Dashboard
+            </Button>
+            <Button 
+              variant="ghost" 
+              className={`w-full justify-start ${activeSection === 'allResumes' ? 'bg-primary-foreground/20 text-primary-foreground' : 'text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground'}`}
+              onClick={() => setActiveSection('allResumes')}
+            >
               <FileText className="w-4 h-4 mr-3" />
               All Resumes
             </Button>
-            <Button variant="ghost" className="w-full justify-start text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground">
+            <Button 
+              variant="ghost" 
+              className={`w-full justify-start ${activeSection === 'upload' ? 'bg-primary-foreground/20 text-primary-foreground' : 'text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground'}`}
+              onClick={() => setActiveSection('upload')}
+            >
               <Upload className="w-4 h-4 mr-3" />
               Upload
             </Button>
-            <Link to="#" onClick={() => setDashboardSection('analytics')}>
-              <Button variant="ghost" className={`w-full justify-start ${dashboardSection === 'analytics' ? 'bg-primary-foreground/20 text-primary-foreground' : 'text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground'}`}> <TrendingUp className="w-4 h-4 mr-3" /> Analytics </Button>
-            </Link>
-            <Button variant="ghost" className="w-full justify-start text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground">
+            <Button 
+              variant="ghost" 
+              className={`w-full justify-start ${activeSection === 'analytics' ? 'bg-primary-foreground/20 text-primary-foreground' : 'text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground'}`}
+              onClick={() => setActiveSection('analytics')}
+            >
+              <TrendingUp className="w-4 h-4 mr-3" />
+              Analytics
+            </Button>
+            <Button 
+              variant="ghost" 
+              className={`w-full justify-start ${activeSection === 'dataExport' ? 'bg-primary-foreground/20 text-primary-foreground' : 'text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground'}`}
+              onClick={() => setActiveSection('dataExport')}
+            >
               <Database className="w-4 h-4 mr-3" />
               Data Export
             </Button>
-            <Button variant="ghost" className="w-full justify-start text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground">
+            <Button 
+              variant="ghost" 
+              className={`w-full justify-start ${activeSection === 'security' ? 'bg-primary-foreground/20 text-primary-foreground' : 'text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground'}`}
+              onClick={() => setActiveSection('security')}
+            >
               <Shield className="w-4 h-4 mr-3" />
               Security
             </Button>
-            <Button variant="ghost" className="w-full justify-start text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground">
+            <Button 
+              variant="ghost" 
+              className={`w-full justify-start ${activeSection === 'notifications' ? 'bg-primary-foreground/20 text-primary-foreground' : 'text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground'}`}
+              onClick={() => setActiveSection('notifications')}
+            >
               <Bell className="w-4 h-4 mr-3" />
               Notifications
             </Button>
-            <Button variant="ghost" className="w-full justify-start text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground">
+            <Button 
+              variant="ghost" 
+              className={`w-full justify-start ${activeSection === 'team' ? 'bg-primary-foreground/20 text-primary-foreground' : 'text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground'}`}
+              onClick={() => setActiveSection('team')}
+            >
               <Users className="w-4 h-4 mr-3" />
               Team
             </Button>
@@ -227,7 +268,11 @@ const Dashboard = () => {
 
         {/* Bottom Nav */}
         <div className="p-4 border-t border-primary-foreground/10 space-y-2">
-          <Button variant="ghost" className="w-full justify-start text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground">
+          <Button 
+            variant="ghost" 
+            className={`w-full justify-start ${activeSection === 'settings' ? 'bg-primary-foreground/20 text-primary-foreground' : 'text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground'}`}
+            onClick={() => setActiveSection('settings')}
+          >
             <Settings className="w-4 h-4 mr-3" />
             Settings
           </Button>
@@ -250,7 +295,17 @@ const Dashboard = () => {
         <header className="bg-white border-b p-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-foreground">{dashboardSection === 'analytics' ? 'Analytics' : 'Resume Parser Overview'}</h1>
+              <h1 className="text-2xl font-bold text-foreground">
+                {activeSection === 'analytics' ? 'Analytics' : 
+                 activeSection === 'allResumes' ? 'All Resumes' :
+                 activeSection === 'upload' ? 'Upload Manager' :
+                 activeSection === 'dataExport' ? 'Data Export' :
+                 activeSection === 'security' ? 'Security & Compliance' :
+                 activeSection === 'notifications' ? 'Notifications' :
+                 activeSection === 'team' ? 'Team Management' :
+                 activeSection === 'settings' ? 'System Settings' :
+                 'Resume Parser Overview'}
+              </h1>
               <p className="text-muted-foreground">Welcome back, Floyd Miles</p>
             </div>
             <div className="flex items-center space-x-4">
@@ -270,10 +325,24 @@ const Dashboard = () => {
 
         {/* Dashboard Content */}
         <div className="flex-1 p-6 space-y-6">
-          {dashboardSection === 'analytics' ? (
+          {activeSection === 'analytics' ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <DashboardAnalytics />
             </div>
+          ) : activeSection === 'allResumes' ? (
+            <AllResumes />
+          ) : activeSection === 'upload' ? (
+            <UploadManager />
+          ) : activeSection === 'dataExport' ? (
+            <DataExport />
+          ) : activeSection === 'security' ? (
+            <SecuritySettings />
+          ) : activeSection === 'notifications' ? (
+            <NotificationCenter />
+          ) : activeSection === 'team' ? (
+            <TeamManagement />
+          ) : activeSection === 'settings' ? (
+            <SystemSettings />
           ) : (
             <>
               {/* Top Row - Main Stats */}
