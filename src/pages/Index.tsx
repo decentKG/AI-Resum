@@ -4,36 +4,58 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, FileText, Zap, Users, BarChart3, Shield, Clock, Target, Star, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useMemo, useRef, useEffect, useState } from "react";
+import Navbar from "@/components/Navbar";
+import { useAuth } from "@/components/AuthContext";
+
+function getRandomStarProps() {
+  return {
+    left: Math.random() * 100, // 0% to 100%
+    size: Math.random() * 2.5 + 1.5, // 1.5px to 4px
+    opacity: Math.random() * 0.4 + 0.5, // 0.5 to 0.9
+    blur: Math.random() * 1.2 + 0.3, // 0.3px to 1.5px
+    duration: Math.random() * 8 + 16, // 16s to 24s
+    delay: Math.random() * 2, // 0s to 2s for more frequent falling
+  };
+}
+
+const FallingStar = ({ baseDelay = 0 }) => {
+  const [props, setProps] = useState(() => ({ ...getRandomStarProps(), delay: baseDelay }));
+  const starRef = useRef(null);
+
+  useEffect(() => {
+    const node = starRef.current;
+    if (!node) return;
+    const handleAnimationIteration = () => {
+      setProps({ ...getRandomStarProps(), delay: baseDelay });
+    };
+    node.addEventListener("animationiteration", handleAnimationIteration);
+    return () => {
+      node.removeEventListener("animationiteration", handleAnimationIteration);
+    };
+  }, [baseDelay]);
+
+  return (
+    <div
+      ref={starRef}
+      className="star absolute bg-white rounded-full shadow-lg"
+      style={{
+        left: `${props.left}%`,
+        width: `${props.size}px`,
+        height: `${props.size}px`,
+        opacity: props.opacity,
+        filter: `blur(${props.blur}px)`,
+        animation: `realisticFallingStar ${props.duration}s linear ${props.delay}s infinite`,
+      }}
+    ></div>
+  );
+};
 
 const Index = () => {
+  const { isAuthenticated } = useAuth();
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
-      {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
-              <FileText className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              C-Resume
-            </span>
-          </div>
-          <div className="flex items-center space-x-4">
-            <Link to="/auth">
-              <Button variant="outline" className="border-blue-200 hover:bg-blue-50">
-                Sign In
-              </Button>
-            </Link>
-            <Link to="/auth">
-              <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
-                Get Started
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </header>
+      <Navbar />
 
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -47,61 +69,100 @@ const Index = () => {
         <div className="absolute inset-0 bg-black/30"></div>
         
         
-        {/* Falling Stars */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="star absolute w-1 h-1 bg-white rounded-full animate-pulse" style={{ left: '15%', animationName: 'fallingStar', animationDuration: '4s', animationDelay: '0s', animationIterationCount: 'infinite', animationTimingFunction: 'linear' }}></div>
-          <div className="star absolute w-1.5 h-1.5 bg-white rounded-full animate-pulse" style={{ left: '25%', animationName: 'fallingStar', animationDuration: '3.5s', animationDelay: '1s', animationIterationCount: 'infinite', animationTimingFunction: 'linear' }}></div>
-          <div className="star absolute w-1 h-1 bg-white rounded-full animate-pulse" style={{ left: '35%', animationName: 'fallingStar', animationDuration: '5s', animationDelay: '2s', animationIterationCount: 'infinite', animationTimingFunction: 'linear' }}></div>
-          <div className="star absolute w-2 h-2 bg-white rounded-full animate-pulse" style={{ left: '45%', animationName: 'fallingStar', animationDuration: '4.5s', animationDelay: '0.5s', animationIterationCount: 'infinite', animationTimingFunction: 'linear' }}></div>
-          <div className="star absolute w-1 h-1 bg-white rounded-full animate-pulse" style={{ left: '55%', animationName: 'fallingStar', animationDuration: '3.8s', animationDelay: '1.5s', animationIterationCount: 'infinite', animationTimingFunction: 'linear' }}></div>
-          <div className="star absolute w-1.5 h-1.5 bg-white rounded-full animate-pulse" style={{ left: '65%', animationName: 'fallingStar', animationDuration: '4.2s', animationDelay: '2.5s', animationIterationCount: 'infinite', animationTimingFunction: 'linear' }}></div>
-          <div className="star absolute w-1 h-1 bg-white rounded-full animate-pulse" style={{ left: '75%', animationName: 'fallingStar', animationDuration: '5.5s', animationDelay: '0.8s', animationIterationCount: 'infinite', animationTimingFunction: 'linear' }}></div>
-          <div className="star absolute w-2 h-2 bg-white rounded-full animate-pulse" style={{ left: '85%', animationName: 'fallingStar', animationDuration: '3.2s', animationDelay: '1.8s', animationIterationCount: 'infinite', animationTimingFunction: 'linear' }}></div>
-          <div className="star absolute w-1 h-1 bg-white rounded-full animate-pulse" style={{ left: '10%', animationName: 'fallingStar', animationDuration: '4.8s', animationDelay: '2.2s', animationIterationCount: 'infinite', animationTimingFunction: 'linear' }}></div>
-          <div className="star absolute w-1.5 h-1.5 bg-white rounded-full animate-pulse" style={{ left: '90%', animationName: 'fallingStar', animationDuration: '3.7s', animationDelay: '0.3s', animationIterationCount: 'infinite', animationTimingFunction: 'linear' }}></div>
-          <div className="star absolute w-1 h-1 bg-white rounded-full animate-pulse" style={{ left: '5%', animationName: 'fallingStar', animationDuration: '4.1s', animationDelay: '1.2s', animationIterationCount: 'infinite', animationTimingFunction: 'linear' }}></div>
-          <div className="star absolute w-2 h-2 bg-white rounded-full animate-pulse" style={{ left: '95%', animationName: 'fallingStar', animationDuration: '5.2s', animationDelay: '2.8s', animationIterationCount: 'infinite', animationTimingFunction: 'linear' }}></div>
+        {/* Falling Stars - 4, staggered by 0.7s, random, frequent */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <style>{`
+            @keyframes realisticFallingStar {
+              0% {
+                transform: translateY(-10%) scale(1);
+                opacity: 0;
+                filter: blur(0.5px);
+              }
+              10% {
+                opacity: 0.8;
+              }
+              90% {
+                opacity: 0.8;
+              }
+              100% {
+                transform: translateY(110vh) scale(0.8);
+                opacity: 0;
+                filter: blur(1.5px);
+              }
+            }
+          `}</style>
+          <FallingStar baseDelay={0} />
+          <FallingStar baseDelay={0.7} />
+          <FallingStar baseDelay={1.4} />
+          <FallingStar baseDelay={2.1} />
         </div>
         
         {/* Content */}
         <div className="relative z-10 max-w-6xl mx-auto px-4 text-center">
-          <Badge variant="outline" className="mb-6 border-blue-200 text-blue-200 bg-blue-900/50 backdrop-blur-sm">
+          <Badge variant="outline" className="mb-6 border-blue-200 text-blue-200 bg-blue-900/50 backdrop-blur-sm animate-heroTitleFadeIn" style={{ animation: 'heroTitleFadeIn 1.1s cubic-bezier(.77,0,.18,1) 0.1s both' }}>
             <Zap className="w-4 h-4 mr-2" />
             AI-Powered Resume Parsing
           </Badge>
-          
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-white leading-tight">
+          <style>{`
+            @keyframes heroTitleFadeIn {
+              0% {
+                opacity: 0;
+                transform: translateY(40px) scale(0.98);
+              }
+              60% {
+                opacity: 1;
+                transform: translateY(-6px) scale(1.03);
+              }
+              100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+              }
+            }
+          `}</style>
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-white leading-tight animate-heroTitleFadeIn whitespace-nowrap" style={{ animation: 'heroTitleFadeIn 1.2s cubic-bezier(.77,0,.18,1) 0.2s both' }}>
             Welcome to Changed Technologies
-          </h1>
-          
-          <p className="text-xl md:text-2xl text-blue-100 mb-8 max-w-4xl mx-auto leading-relaxed">
+          </h2>
+          <p className="text-xl md:text-2xl text-blue-100 mb-8 max-w-4xl mx-auto leading-relaxed animate-heroTitleFadeIn" style={{ animation: 'heroTitleFadeIn 1.2s cubic-bezier(.77,0,.18,1) 0.4s both' }}>
             Revolutionize your hiring process with our <span className="text-blue-300 font-semibold">AI-powered Resume Parser.</span>
             {' '}Instantly transform unstructured resumes into actionable, categorized data,
             empowering recruiters to efficiently identify top talent.
           </p>
-          
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12">
+            {isAuthenticated ? (
+              <Link to="/dashboard">
+                <Button 
+                  size="lg" 
+                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 px-10 py-4 text-lg font-semibold transform hover:scale-105 transition-all duration-200 shadow-2xl animate-heroTitleFadeIn"
+                  style={{ animation: 'heroTitleFadeIn 1.2s cubic-bezier(.77,0,.18,1) 0.6s both' }}
+                >
+                  Dashboard
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              </Link>
+            ) : (
             <Link to="/auth">
               <Button 
                 size="lg" 
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 px-10 py-4 text-lg font-semibold transform hover:scale-105 transition-all duration-200 shadow-2xl"
+                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 px-10 py-4 text-lg font-semibold transform hover:scale-105 transition-all duration-200 shadow-2xl animate-heroTitleFadeIn"
+                  style={{ animation: 'heroTitleFadeIn 1.2s cubic-bezier(.77,0,.18,1) 0.6s both' }}
               >
                 Get Started
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </Link>
+            )}
             <Link to="/auth">
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="border-2 border-white text-white hover:bg-white hover:text-blue-900 px-10 py-4 text-lg font-semibold transform hover:scale-105 transition-all duration-200 backdrop-blur-sm"
+                className="border-2 border-white text-blue-600 hover:bg-white hover:text-blue-900 px-10 py-4 text-lg font-semibold transform hover:scale-105 transition-all duration-200 backdrop-blur-sm animate-heroTitleFadeIn"
+                style={{ animation: 'heroTitleFadeIn 1.2s cubic-bezier(.77,0,.18,1) 0.8s both' }}
               >
                 Learn More
               </Button>
             </Link>
           </div>
-          
-          <div className="text-blue-200 text-lg font-medium">
+          <div className="text-blue-200 text-lg font-medium animate-heroTitleFadeIn" style={{ animation: 'heroTitleFadeIn 1.2s cubic-bezier(.77,0,.18,1) 1s both' }}>
             Trusted by 500+ companies worldwide
           </div>
         </div>

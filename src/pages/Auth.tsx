@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { FileText, Building2, Users, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/components/AuthContext";
 
 const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,6 +18,7 @@ const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { setIsAuthenticated } = useAuth();
 
   const [signUpData, setSignUpData] = useState({
     companyName: "",
@@ -65,7 +67,8 @@ const Auth = () => {
         description: "Your account has been created successfully. Welcome to C-Resume!"
       });
       setIsLoading(false);
-      navigate("/dashboard");
+      setIsAuthenticated(true);
+      navigate("/");
     }, 2000);
   };
 
@@ -80,7 +83,8 @@ const Auth = () => {
         description: "You have been signed in successfully."
       });
       setIsLoading(false);
-      navigate("/dashboard");
+      setIsAuthenticated(true);
+      navigate("/");
     }, 1500);
   };
 

@@ -31,6 +31,10 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { useRef } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { ChartContainer } from "@/components/ui/chart";
+import { BarChart, Bar, XAxis, YAxis, PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
 // Mock data for demonstration
 const mockResumes = [
@@ -77,40 +81,98 @@ const mockResumes = [
 
 const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedResume, setSelectedResume] = useState(null);
+  const [selectedResume, setSelectedResume] = useState<any>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
+  const [resumes, setResumes] = useState(mockResumes);
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [dashboardSection, setDashboardSection] = useState<'main' | 'analytics'>('main');
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  // Helper: Parse TXT file for demo
+  const parseTxtResume = async (file: File) => {
+    const text = await file.text();
+    // Simple regex for demo
+    const nameMatch = text.match(/Name[:\-\s]+(.+)/i);
+    const emailMatch = text.match(/Email[:\-\s]+([\w.-]+@[\w.-]+)/i);
+    const positionMatch = text.match(/Position[:\-\s]+(.+)/i);
+    return {
+      name: nameMatch ? nameMatch[1].trim() : file.name,
+      email: emailMatch ? emailMatch[1].trim() : "",
+      position: positionMatch ? positionMatch[1].trim() : "",
+      experience: "N/A",
+      skills: [],
+      education: "N/A",
+      uploadDate: new Date().toISOString().slice(0, 10),
+      status: "processed",
+      matchScore: Math.floor(Math.random() * 21) + 80, // 80-100
+      id: Date.now() + Math.random(),
+    };
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
       setIsUploading(true);
       setUploadProgress(0);
-
       // Simulate upload progress
+      let progress = 0;
       const interval = setInterval(() => {
-        setUploadProgress((prev) => {
-          if (prev >= 100) {
-            clearInterval(interval);
-            setIsUploading(false);
-            toast({
-              title: "Upload Complete!",
-              description: `${files.length} resume(s) uploaded successfully and are being processed.`
-            });
-            return 100;
-          }
-          return prev + 10;
+        progress += 10;
+        setUploadProgress(progress);
+        if (progress >= 100) {
+          clearInterval(interval);
+        }
+      }, 100);
+      // Parse and add resumes
+      const newResumes = [];
+      for (const file of Array.from(files)) {
+        let parsed;
+        if (file.type === "text/plain") {
+          parsed = await parseTxtResume(file);
+        } else {
+          // For PDF/DOCX, just show filename and placeholder
+          parsed = {
+            name: file.name,
+            email: "",
+            position: "(unparsed)",
+            experience: "N/A",
+            skills: [],
+            education: "N/A",
+            uploadDate: new Date().toISOString().slice(0, 10),
+            status: "processed",
+            matchScore: Math.floor(Math.random() * 21) + 80,
+            id: Date.now() + Math.random(),
+          };
+        }
+        newResumes.push(parsed);
+      }
+      setTimeout(() => {
+        setIsUploading(false);
+        setUploadProgress(100);
+        setResumes((prev) => [...newResumes, ...prev]);
+        toast({
+          title: "Upload Complete!",
+          description: `${files.length} resume(s) uploaded and parsed.`
         });
-      }, 200);
+        if (fileInputRef.current) fileInputRef.current.value = "";
+      }, 1200);
     }
   };
 
-  const filteredResumes = mockResumes.filter(resume =>
+  const filteredResumes = resumes.filter(resume =>
     resume.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     resume.position.toLowerCase().includes(searchTerm.toLowerCase()) ||
     resume.skills.some(skill => skill.toLowerCase().includes(searchTerm.toLowerCase()))
   );
+
+  // Analytics calculations
+  const totalResumes = resumes.length;
+  const processedResumes = resumes.filter(r => r.status === 'processed').length;
+  const processingResumes = resumes.filter(r => r.status !== 'processed').length;
+  const avgMatchScore = resumes.length ? Math.round(resumes.reduce((sum, r) => sum + (r.matchScore || 0), 0) / resumes.length) : 0;
+  const allSkills = resumes.flatMap(r => r.skills || []);
+  const topSkills = Array.from(new Set(allSkills)).slice(0, 5);
 
   return (
     <div className="min-h-screen bg-muted/30 flex">
@@ -129,10 +191,9 @@ const Dashboard = () => {
         {/* Navigation */}
         <nav className="flex-1 p-4">
           <div className="space-y-2">
-            <Button variant="ghost" className="w-full justify-start bg-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/30">
-              <BarChart3 className="w-4 h-4 mr-3" />
-              Dashboard
-            </Button>
+            <Link to="#" onClick={() => setDashboardSection('main')}>
+              <Button variant="ghost" className={`w-full justify-start ${dashboardSection === 'main' ? 'bg-primary-foreground/20 text-primary-foreground' : 'text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground'}`}> <BarChart3 className="w-4 h-4 mr-3" /> Dashboard </Button>
+            </Link>
             <Button variant="ghost" className="w-full justify-start text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground">
               <FileText className="w-4 h-4 mr-3" />
               All Resumes
@@ -141,10 +202,9 @@ const Dashboard = () => {
               <Upload className="w-4 h-4 mr-3" />
               Upload
             </Button>
-            <Button variant="ghost" className="w-full justify-start text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground">
-              <TrendingUp className="w-4 h-4 mr-3" />
-              Analytics
-            </Button>
+            <Link to="#" onClick={() => setDashboardSection('analytics')}>
+              <Button variant="ghost" className={`w-full justify-start ${dashboardSection === 'analytics' ? 'bg-primary-foreground/20 text-primary-foreground' : 'text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground'}`}> <TrendingUp className="w-4 h-4 mr-3" /> Analytics </Button>
+            </Link>
             <Button variant="ghost" className="w-full justify-start text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground">
               <Database className="w-4 h-4 mr-3" />
               Data Export
@@ -189,7 +249,7 @@ const Dashboard = () => {
         <header className="bg-white border-b p-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-foreground">Resume Parser Overview</h1>
+              <h1 className="text-2xl font-bold text-foreground">{dashboardSection === 'analytics' ? 'Analytics' : 'Resume Parser Overview'}</h1>
               <p className="text-muted-foreground">Welcome back, Floyd Miles</p>
             </div>
             <div className="flex items-center space-x-4">
@@ -209,251 +269,315 @@ const Dashboard = () => {
 
         {/* Dashboard Content */}
         <div className="flex-1 p-6 space-y-6">
-          {/* Top Row - Main Stats */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Resume Processing Overview */}
-            <Card className="bg-primary text-primary-foreground">
-              <CardHeader>
-                <CardTitle className="text-lg">Resume overview</CardTitle>
-                <div className="flex items-center space-x-4 mt-4">
-                  <div className="text-3xl font-bold">1,247</div>
-                  <div className="text-sm opacity-90">Total processed</div>
+          {dashboardSection === 'analytics' ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="bg-white rounded-lg shadow p-6">
+                <h2 className="text-xl font-bold mb-4">Resume Stats</h2>
+                <ResponsiveContainer width="100%" height={250}>
+                  <BarChart data={[
+                    { name: 'Processed', value: processedResumes },
+                    { name: 'Processing', value: processingResumes },
+                  ]}>
+                    <XAxis dataKey="name" />
+                    <YAxis allowDecimals={false} />
+                    <Bar dataKey="value" fill="#6366f1" />
+                    <Tooltip />
+                  </BarChart>
+                </ResponsiveContainer>
+                <div className="space-y-2 mt-4">
+                  <div><span className="font-semibold">Total Resumes:</span> {totalResumes}</div>
+                  <div><span className="font-semibold">Average Match Score:</span> {avgMatchScore}%</div>
                 </div>
-                <div className="flex items-center space-x-6 mt-4">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                    <span className="text-sm">99% Success rate</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
-                    <span className="text-sm">23 Today</span>
-                  </div>
-                </div>
-              </CardHeader>
-            </Card>
-
-            {/* Parsing Statistics */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <span>Parsing Statistics</span>
-                  <Button variant="ghost" size="sm">⋯</Button>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm">Successful</span>
-                      <span className="text-sm font-medium">98%</span>
+              </div>
+              <div className="bg-white rounded-lg shadow p-6">
+                <h2 className="text-xl font-bold mb-4">Top Skills</h2>
+                <ResponsiveContainer width="100%" height={250}>
+                  <PieChart>
+                    <Pie data={topSkills.map((skill, idx) => ({ name: skill, value: allSkills.filter(s => s === skill).length, fill: ["#6366f1", "#22d3ee", "#f59e42", "#10b981", "#f43f5e", "#a21caf"][idx % 6] }))} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
+                      {topSkills.map((skill, idx) => <Cell key={skill} fill={["#6366f1", "#22d3ee", "#f59e42", "#10b981", "#f43f5e", "#a21caf"][idx % 6]} />)}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+                <ul className="list-disc pl-6 mt-4">
+                  {topSkills.length > 0 ? topSkills.map(skill => <li key={skill}>{skill}</li>) : <li>No skills parsed yet.</li>}
+                </ul>
+              </div>
+            </div>
+          ) : (
+            <>
+              {/* Top Row - Main Stats */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Resume Processing Overview */}
+                <Card className="bg-primary text-primary-foreground">
+                  <CardHeader>
+                    <CardTitle className="text-lg">Resume overview</CardTitle>
+                    <div className="flex items-center space-x-4 mt-4">
+                      <div className="text-3xl font-bold">1,247</div>
+                      <div className="text-sm opacity-90">Total processed</div>
                     </div>
-                    <Progress value={98} className="h-2" />
-                  </div>
-                  <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm">Pending</span>
-                      <span className="text-sm font-medium">1.5%</span>
-                    </div>
-                    <Progress value={1.5} className="h-2" />
-                  </div>
-                  <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm">Failed</span>
-                      <span className="text-sm font-medium">0.5%</span>
-                    </div>
-                    <Progress value={0.5} className="h-2" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Processing Efficiency */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <span>Processing Efficiency</span>
-                  <Button variant="ghost" size="sm">⋯</Button>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-3 gap-4 text-center">
-                  <div>
-                    <div className="text-2xl font-bold text-primary">2.3s</div>
-                    <div className="text-xs text-muted-foreground">Avg Time</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-primary">24%</div>
-                    <div className="text-xs text-muted-foreground">Faster</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-primary">12%</div>
-                    <div className="text-xs text-muted-foreground">Error Rate</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Second Row - Detailed Analytics */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Processing Analytics */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <span>Processing Analytics</span>
-                  <div className="flex space-x-2">
-                    <Button variant="outline" size="sm">Monthly</Button>
-                  </div>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {mockResumes.slice(0, 3).map((resume, index) => (
-                    <div key={resume.id} className="flex items-center justify-between p-3 border rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-                          <FileText className="w-4 h-4 text-primary" />
-                        </div>
-                        <div>
-                          <div className="font-medium">{["All Names", "All Names", "All Names"][index]}</div>
-                          <div className="text-sm text-muted-foreground">{["F.O.C.A #930", "F.O.C.A #934", "Y.O.C.A #930"][index]}</div>
-                        </div>
+                    <div className="flex items-center space-x-6 mt-4">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                        <span className="text-sm">99% Success rate</span>
                       </div>
-                      <div className="text-right">
-                        <div className="font-bold">{["245k", "558k", "412k"][index]}</div>
-                        <div className="text-sm text-muted-foreground">Resumes parsed</div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                        <span className="text-sm">23 Today</span>
                       </div>
-                      <div className="w-16 h-8 bg-primary/20 rounded"></div>
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                  </CardHeader>
+                </Card>
 
-            {/* Upload & Processing */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Upload & Process</CardTitle>
-                <CardDescription>Upload resumes for AI-powered parsing</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="border-2 border-dashed border-muted rounded-lg p-6 text-center">
-                  <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-                  <div className="text-sm font-medium mb-1">Drop your resume files here</div>
-                  <div className="text-xs text-muted-foreground mb-3">or click to browse</div>
-                  <input
-                    type="file"
-                    multiple
-                    accept=".pdf,.doc,.docx,.txt"
-                    onChange={handleFileUpload}
-                    className="hidden"
-                    id="file-upload"
-                  />
-                  <label htmlFor="file-upload">
-                    <Button size="sm" className="cursor-pointer">
-                      Choose Files
-                    </Button>
-                  </label>
-                  <div className="text-xs text-muted-foreground mt-2">
-                    Supports PDF, DOC, DOCX, TXT files
-                  </div>
-                </div>
-
-                {isUploading && (
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span>Uploading...</span>
-                      <span>{uploadProgress}%</span>
+                {/* Parsing Statistics */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      <span>Parsing Statistics</span>
+                      <Button variant="ghost" size="sm">⋯</Button>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div>
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-sm">Successful</span>
+                          <span className="text-sm font-medium">98%</span>
+                        </div>
+                        <Progress value={98} className="h-2" />
+                      </div>
+                      <div>
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-sm">Pending</span>
+                          <span className="text-sm font-medium">1.5%</span>
+                        </div>
+                        <Progress value={1.5} className="h-2" />
+                      </div>
+                      <div>
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-sm">Failed</span>
+                          <span className="text-sm font-medium">0.5%</span>
+                        </div>
+                        <Progress value={0.5} className="h-2" />
+                      </div>
                     </div>
-                    <Progress value={uploadProgress} className="w-full" />
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
+                  </CardContent>
+                </Card>
 
-          {/* Third Row - Resume Management */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Recent Resumes */}
-            <Card className="lg:col-span-2">
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <span>Recent Resumes</span>
-                  <div className="flex space-x-2">
-                    <Button variant="outline" size="sm">
-                      <Filter className="w-4 h-4 mr-2" />
-                      Filter
+                {/* Processing Efficiency */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      <span>Processing Efficiency</span>
+                      <Button variant="ghost" size="sm">⋯</Button>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-3 gap-4 text-center">
+                      <div>
+                        <div className="text-2xl font-bold text-primary">2.3s</div>
+                        <div className="text-xs text-muted-foreground">Avg Time</div>
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold text-primary">24%</div>
+                        <div className="text-xs text-muted-foreground">Faster</div>
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold text-primary">12%</div>
+                        <div className="text-xs text-muted-foreground">Error Rate</div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Second Row - Detailed Analytics */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Processing Analytics */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      <span>Processing Analytics</span>
+                      <div className="flex space-x-2">
+                        <Button variant="outline" size="sm">Monthly</Button>
+                      </div>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {mockResumes.slice(0, 3).map((resume, index) => (
+                        <div key={resume.id} className="flex items-center justify-between p-3 border rounded-lg">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                              <FileText className="w-4 h-4 text-primary" />
+                            </div>
+                            <div>
+                              <div className="font-medium">{["All Names", "All Names", "All Names"][index]}</div>
+                              <div className="text-sm text-muted-foreground">{["F.O.C.A #930", "F.O.C.A #934", "Y.O.C.A #930"][index]}</div>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className="font-bold">{["245k", "558k", "412k"][index]}</div>
+                            <div className="text-sm text-muted-foreground">Resumes parsed</div>
+                          </div>
+                          <div className="w-16 h-8 bg-primary/20 rounded"></div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Upload & Processing */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Upload & Process</CardTitle>
+                    <CardDescription>Upload resumes for AI-powered parsing</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="border-2 border-dashed border-muted rounded-lg p-6 text-center">
+                      <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                      <div className="text-sm font-medium mb-1">Drop your resume files here</div>
+                      <div className="text-xs text-muted-foreground mb-3">or click to browse</div>
+                      <input
+                        type="file"
+                        multiple
+                        accept=".pdf,.doc,.docx,.txt"
+                        onChange={handleFileUpload}
+                        className="hidden"
+                        id="file-upload"
+                        ref={fileInputRef}
+                      />
+                      <Button size="sm" className="cursor-pointer" onClick={() => fileInputRef.current && fileInputRef.current.click()}>
+                        Choose Files
+                      </Button>
+                      <div className="text-xs text-muted-foreground mt-2">
+                        Supports PDF, DOC, DOCX, TXT files
+                      </div>
+                    </div>
+
+                    {isUploading && (
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span>Uploading...</span>
+                          <span>{uploadProgress}%</span>
+                        </div>
+                        <Progress value={uploadProgress} className="w-full" />
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Third Row - Resume Management */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Recent Resumes */}
+                <Card className="lg:col-span-2">
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      <span>Recent Resumes</span>
+                      <div className="flex space-x-2">
+                        <Button variant="outline" size="sm">
+                          <Filter className="w-4 h-4 mr-2" />
+                          Filter
+                        </Button>
+                        <Button variant="outline" size="sm">
+                          <Download className="w-4 h-4 mr-2" />
+                          Export
+                        </Button>
+                      </div>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {filteredResumes.map((resume) => (
+                        <div key={resume.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors cursor-pointer" onClick={() => setSelectedResume(resume)}>
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                              <FileText className="w-4 h-4 text-primary" />
+                            </div>
+                            <div>
+                              <div className="font-medium">{resume.name}</div>
+                              <div className="text-sm text-muted-foreground">{resume.position}</div>
+                              {resume.email && <div className="text-xs text-muted-foreground">{resume.email}</div>}
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-4">
+                            <div className="text-right">
+                              <div className="text-sm font-medium">{resume.matchScore}% Match</div>
+                              <div className="text-xs text-muted-foreground">{resume.uploadDate}</div>
+                            </div>
+                            <Badge variant={resume.status === 'processed' ? 'default' : 'secondary'}>
+                              {resume.status === 'processed' ? 'Processed' : 'Processing'}
+                            </Badge>
+                            <div className="flex space-x-1">
+                              <Button size="sm" variant="outline">
+                                <Eye className="w-4 h-4" />
+                              </Button>
+                              <Button size="sm" variant="outline">
+                                <FileDown className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Quick Actions */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Quick Actions</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <Button className="w-full justify-start" variant="outline" onClick={() => fileInputRef.current && fileInputRef.current.click()}>
+                      <Upload className="w-4 h-4 mr-2" />
+                      Bulk Upload
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button className="w-full justify-start" variant="outline">
                       <Download className="w-4 h-4 mr-2" />
-                      Export
+                      Export All Data
                     </Button>
-                  </div>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {filteredResumes.map((resume) => (
-                    <div key={resume.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-                          <FileText className="w-4 h-4 text-primary" />
-                        </div>
-                        <div>
-                          <div className="font-medium">{resume.name}</div>
-                          <div className="text-sm text-muted-foreground">{resume.position}</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-4">
-                        <div className="text-right">
-                          <div className="text-sm font-medium">{resume.matchScore}% Match</div>
-                          <div className="text-xs text-muted-foreground">{resume.uploadDate}</div>
-                        </div>
-                        <Badge variant={resume.status === 'processed' ? 'default' : 'secondary'}>
-                          {resume.status === 'processed' ? 'Processed' : 'Processing'}
-                        </Badge>
-                        <div className="flex space-x-1">
-                          <Button size="sm" variant="outline">
-                            <Eye className="w-4 h-4" />
-                          </Button>
-                          <Button size="sm" variant="outline">
-                            <FileDown className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Quick Actions */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Quick Actions</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <Button className="w-full justify-start" variant="outline">
-                  <Upload className="w-4 h-4 mr-2" />
-                  Bulk Upload
-                </Button>
-                <Button className="w-full justify-start" variant="outline">
-                  <Download className="w-4 h-4 mr-2" />
-                  Export All Data
-                </Button>
-                <Button className="w-full justify-start" variant="outline">
-                  <TrendingUp className="w-4 h-4 mr-2" />
-                  Generate Report
-                </Button>
-                <Button className="w-full justify-start" variant="outline">
-                  <Settings className="w-4 h-4 mr-2" />
-                  Parser Settings
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
+                    <Button className="w-full justify-start" variant="outline">
+                      <TrendingUp className="w-4 h-4 mr-2" />
+                      Generate Report
+                    </Button>
+                    <Button className="w-full justify-start" variant="outline">
+                      <Settings className="w-4 h-4 mr-2" />
+                      Parser Settings
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            </>
+          )}
         </div>
       </div>
+
+      {/* Resume Details Modal */}
+      <Dialog open={!!selectedResume} onOpenChange={() => setSelectedResume(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Resume Details</DialogTitle>
+            <DialogDescription>
+              Parsed information from the uploaded resume.
+            </DialogDescription>
+          </DialogHeader>
+          {selectedResume && (
+            <div className="space-y-2 mt-2">
+              <div><span className="font-semibold">Name:</span> {selectedResume.name}</div>
+              {selectedResume.email && <div><span className="font-semibold">Email:</span> {selectedResume.email}</div>}
+              <div><span className="font-semibold">Position:</span> {selectedResume.position}</div>
+              <div><span className="font-semibold">Experience:</span> {selectedResume.experience}</div>
+              <div><span className="font-semibold">Skills:</span> {selectedResume.skills && selectedResume.skills.length > 0 ? selectedResume.skills.join(", ") : "N/A"}</div>
+              <div><span className="font-semibold">Education:</span> {selectedResume.education}</div>
+              <div><span className="font-semibold">Upload Date:</span> {selectedResume.uploadDate}</div>
+              <div><span className="font-semibold">Status:</span> {selectedResume.status}</div>
+              <div><span className="font-semibold">Match Score:</span> {selectedResume.matchScore}%</div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
     </div>
   );
