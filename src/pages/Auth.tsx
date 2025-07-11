@@ -101,8 +101,6 @@ const Auth = () => {
               C-Resume
             </span>
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Welcome to C-Resume</h1>
-          <p className="text-gray-600">AI-powered resume parsing for your business</p>
         </div>
 
         <Card className="shadow-xl border-0">
